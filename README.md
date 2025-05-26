@@ -3,7 +3,7 @@
 ## Data overview 
 The English Prescribing Dataset (EPD) is a comprehensive resource detailing prescriptions issued by general practices in England and dispensed across the UK and Crown Dependencies. It is compiled and published monthly by the NHS Business Services Authority (NHSBSA) via the Open Data Portal and updated montly, the last update dates back to March 2025, the first records date back to January 2014.
 
-FOr accessing the data please visit : https://opendata.nhsbsa.net/dataset/english-prescribing-data-epd. Importantly no prior training needs to be done to gain access.
+For accessing the data, please visit : https://opendata.nhsbsa.net/dataset/english-prescribing-data-epd. Importantly no prior training needs to be done to gain access.
 
 ## Data Source and Collection:
 
