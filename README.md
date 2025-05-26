@@ -45,5 +45,9 @@ appeared on prescription forms that were prescribed and dispensed
 2. Type of medication prescribed (e.g., mental health related drugs, addiction) to ensure that community-level bias are avoided.
 3. Practice name - not inherently protected, but might be used as a proxy to identify geographic and socioeconomic clusters.
 
+***
+#### Documentation for EDP can be viewed in the following link:
+https://opendata.nhsbsa.net/dataset/english-prescribing-data-epd
+
 
 
