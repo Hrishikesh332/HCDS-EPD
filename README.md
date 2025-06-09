@@ -1,3 +1,4 @@
+
 # HCDS-EPD
 
 ## Data overview 
@@ -48,6 +49,15 @@ appeared on prescription forms that were prescribed and dispensed
 ***
 #### Documentation for EDP can be viewed in the following link:
 https://opendata.nhsbsa.net/dataset/english-prescribing-data-epd
+
+
+## Decision-Making Scenario
+
+Government spending on prescription medicine is hard to predict and allocate. There are drug epidemics sweeping England every year, and there can also be malpractice in individual hospitals. All these factors make the job of allocating funds for prescription medication in particula regions very hard. <br>
+We propose a ML-based decision making solution, that will forecast the cost of prescribed medication in a geographical area, for the next time period. The ML model will be able to catch certain patterns and trends in the data, and provide reliable predictions, which can serve as a basis for decision making. <br>
+The system will produce predictions which will be saved and presented in a webpage UI, along with the explanations behind the decisions. This webpage will be accessible by policy makers and government officials tasked with allocating funds. The officials will be able to base their decisions on robust forecasts, and not just their gut feeling.<br>
+The particular ML task for this tool is spatio-temporal forecasting (regression), but the system could also aid with clustering data analysis, anomaly detection, etc. <br>
+It is very important not to endager any specific hospital or part of the population with the outcomes of using such a solution. The protected attributes (individual hospitals, geographical information) should be left out of the equation, and the resulting system should be robust and provide enough coverage.
 
 
 
