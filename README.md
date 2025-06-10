@@ -59,5 +59,77 @@ The system will produce predictions which will be saved and presented in a webpa
 The particular ML task for this tool is spatio-temporal forecasting (regression), but the system could also aid with clustering data analysis, anomaly detection, etc. <br>
 It is very important not to endager any specific hospital or part of the population with the outcomes of using such a solution. The protected attributes (individual hospitals, geographical information) should be left out of the equation, and the resulting system should be robust and provide enough coverage.
 
+## Stakeholder Analysis
+
+1. **NHSBSA Administrators**
+
+**Stakeholder Knowledge**:
+* High understanding of healthcare regulations. Familiar with data collection and validation processes for the EPD. Familiarity with EPD structure, data fields (e.g., costs, quantities), and update schedules.
+
+**Goals**:
+
+* Ensure accurate and secure management of prescribing data.
+
+**Objectives**:
+* Maintain data integrity and compliance.
+
+**Tasks**:
+* Check  data uploads and updates of data.
+* Validate data quality and resolve discrepancies..
+
+**Key Questions**:
+* How does the platform ensure data security and compliance with GDPR?
+* How quickly can we generate reports for specific medications?
+
+2. **Healthcare Researchers**
+
+**Stakeholder Knowledge**:
+
+* Expert knowledge in healthcare policy. 
+
+**Goals** :
+
+* Produce high-impact research on prescribing patterns and healthcare outcomes.
+* Identify trends to inform clinical guidelines and policy.
+
+**Objectives**:
+
+
+**Tasks**:
+
+* Perform statistical analysis on prescription volumes and costs.
+* Visualize regional variations for publications.
+
+**Key Questions**:
+
+* How does the platform handle missing or incomplete data?
+
+
+3. **Public Health Officials**
+
+**Stakeholder Knowledge**:
+
+* Domain Expertise: Expert in public health policy. Knowledge in data analysis for regional analysis. 
+
+**Goals** :
+
+* Monitor and reduce public health risks.
+* Inform national health policies with prescribing insights.
+
+**Objectives**:
+
+* Track prescribing trends for high risk medicatiions .
+* Analyze regional disparities in healthcare.
+
+**Tasks**:
+
+* Generate reports on antibiotic prescribing rates across England.
+* Map prescription volumes by region for resource allocation.
+
+
+**Key Questions**:
+
+* How does it support geographic analysis of prescribing patterns?
+
 
 
