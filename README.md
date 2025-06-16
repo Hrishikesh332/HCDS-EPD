@@ -130,6 +130,14 @@ It is very important not to endager any specific hospital or part of the populat
 **Key Questions**:
 
 * How does it support geographic analysis of prescribing patterns?
+* 
+
+## Group Paper Prototypes
+**Preliminary**
+![WhatsApp Image 2025-06-16 at 22 43 00_8aab9d4a](https://github.com/user-attachments/assets/1f3adb23-40a5-46a4-985e-e43a36dd82ea)
+![WhatsApp Image 2025-06-16 at 22 43 01_8e413adb](https://github.com/user-attachments/assets/46342f73-6477-4b40-ac30-cf4ffa85d2ca)
+**Final**
+![WhatsApp Image 2025-06-16 at 22 43 01_c5c22476](https://github.com/user-attachments/assets/2fa0a7e4-e525-49a7-94ba-2f8d94a94b7c)
 
 
 
