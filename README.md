@@ -140,4 +140,18 @@ It is very important not to endager any specific hospital or part of the populat
 ![WhatsApp Image 2025-06-16 at 22 43 01_c5c22476](https://github.com/user-attachments/assets/2fa0a7e4-e525-49a7-94ba-2f8d94a94b7c)
 
 
+## Scenario Walkthrough
 
+* The stakeholder interacts with website. The entry point is login page or an informative landing page that presents overview of national and regional prescription spending. 
+* The decision supported is presented via interactive visualization that supports filtering by region and time window and optional insights such as anomalies or high volatility zones The information presented focuses on Geographical and temporal divisions of the data. It should give the stakeholders clear image of monthly forecasted cost per region, confidence intervals and anomaly alerts. 
+* Forecasting uncertainty is communicated through shaded confidence intervals on time-series plots. Where uncertainty exceeds a defined threshold, a warning icon is displayed with a tooltip explaining the risk of over or under-allocation.
+* Using SHAP values, confidence intervals, or low-confidence warnings, the system provides interpretable explanations by showing which features most contributed to a prediction — e.g., previous cost spikes, seasonal flu, etc. Simple tooltips or expandable panels show why a region is forecasted to increase, using natural language. Public health officials have access to full details, including region-level data and confidence intervals. However, as they might also be non-technical users, the system summarizes predictions using color-coded indicators and simple explanations.
+* To ensure that system remains responsive to stakeholder needs, a feedback form is als integrated into the user interface. NHS administrators, healthcare researchers, and public health officials—are encouraged to share suggestions for improvement or further requirements.
+
+## Prototypes from exercise session
+![Screen1](images/1.jpeg)
+![Screen1](images/2.jpeg)
+![Screen1](images/3.jpeg)
+![Screen1](images/3A.jpeg)
+![Screen1](images/4.jpeg)
+![Screen1](images/5.jpeg)
