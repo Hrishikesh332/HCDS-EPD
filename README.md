@@ -155,3 +155,7 @@ It is very important not to endager any specific hospital or part of the populat
 ![Screen1](images/3A.jpeg)
 ![Screen1](images/4.jpeg)
 ![Screen1](images/5.jpeg)
+
+## User Interview
+In order to validate our prototype before finalizing it, we have compiled an interview guide, and would interview potential users.
+You can find the interview guide at the following URL: https://docs.google.com/document/d/1ddFtsiFzEY1weKoCA326Nb-O7l8S8Wm_FCaIgB1jr9E/edit?tab=t.mslw7ytt53ot
