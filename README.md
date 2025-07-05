@@ -159,3 +159,17 @@ It is very important not to endager any specific hospital or part of the populat
 ## User Interview
 In order to validate our prototype before finalizing it, we have compiled an interview guide, and would interview potential users.
 You can find the interview guide at the following URL: https://docs.google.com/document/d/1ddFtsiFzEY1weKoCA326Nb-O7l8S8Wm_FCaIgB1jr9E/edit?tab=t.mslw7ytt53ot
+
+## User Study Feedback
+We have interviewed **two** potential users. Their feedback was mostly aligned, but was conflicted in an interesting area.
+<br><br>
+- The users had a rough idea of AI systems and have previously used data analysis dashboards, but didn't consider themselves as very knowledgable of AI. This gives us a **representative sample for someone that would actually use the app** in production.
+- **The feedback overall was positive** - the users liked how the application was built, and the main interface (especially showing the geographical visualizations) was helpful. The users were impressed by the application, and showed interest in using it.
+- The largest point of negative feedback was the **complexity of the app**. The app provides many data analysis tools across multiple tabs and often feels **'overwhelming'**. Users expressed that they would mainly use one or two features of the app (main dashboard and 'Forecasting' tab), and that they would visit other tabs only once or twice. The UI design should account for that. A common complaint was also the amount of information in the UI. The biggest complaint was the **excessive usage of expert-level language**, such as 'outlier', 'clustering', 'hypothesis test', 'parity gap', etc. The users would like for this language to be translated to actionable insights, i.e. they want to know what they can do with this information. Example: outlier -> check unusual historical costs.
+- The confict between user answers was in the 'Forecasting' tab feedback. One user felt like the tab gave a perfect amount of information, and liked it the best. But the other user felt overwhelmed and asked for a simplified visualization. Thus we think that a **configurable forecasting visualization** is the way to go - as the users can choose their own levels of complexity.
+<br><br>
+We concluded that our approach should be more user-centric, and less focused on the technology. We gained insights on what the users actually want, need, and what they would focus on. **This gave us a clear indicaiton on the next steps**: <br><br>
+- Reduce the amount of information shown in the UI - simpler is better.
+- Group the most useful parts of the application and make them easily accessible. Also keep the other parts but put them in another location, for users that want to 'know more'
+- Translate data science lingo into domain lingo, to assist with decision making
+- Make the forecasting interface configurable to address all user needs
