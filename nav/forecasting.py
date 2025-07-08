@@ -5,25 +5,34 @@ from utils import train_arima
 from config import create_region_selector
 
 def forecasting(df):
-    st.markdown('<h1 class="main-header">Forecasting Analytics</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">Forecast</h1>', unsafe_allow_html=True)
     
     selected_region = create_region_selector(df)
+    region_data = df[df['REGIONAL_OFFICE_NAME'] == selected_region]
+    available_categories = sorted(region_data['BNF_CHAPTER_PLUS_CODE'].unique())
+    default_categories = available_categories[:8] if len(available_categories) > 8 else available_categories
+    selected_categories = st.multiselect(
+        "Choose Categories:",
+        available_categories,
+        default=default_categories
+    )
     
     col1, col2 = st.columns(2)
     with col1:
-        forecast_periods = st.slider("Forecast Periods:", 3, 36, 12)
+        forecast_periods = st.slider("Months to Forecast:", 3, 36, 12)
     with col2:
-        confidence_level = st.selectbox("Confidence Level:", [90, 95, 99], index=1)
-  
+        confidence_level = st.selectbox("Confidence:", [90, 95, 99], index=1)
     
+    if not selected_categories:
+        st.warning("Select at least one category.")
+        return
     
-    line_chart = create_multi_category_forecast(df, selected_region, forecast_periods)
+    line_chart = create_multi_category_forecast(region_data, selected_categories, forecast_periods)
     st.plotly_chart(line_chart, use_container_width=True)
     
-    forecast_insights(df, selected_region, forecast_periods, confidence_level)
+    forecast_insights(region_data, selected_categories, forecast_periods, confidence_level)
 
-def create_multi_category_forecast(df, selected_region, forecast_months):
-    region_data = df[df['REGIONAL_OFFICE_NAME'] == selected_region]
+def create_multi_category_forecast(region_data, selected_categories, forecast_months):
     all_bnf = region_data.groupby('BNF_CHAPTER_PLUS_CODE')['TOTAL_COST'].sum()
     
     fig = go.Figure()
@@ -46,8 +55,8 @@ def create_multi_category_forecast(df, selected_region, forecast_months):
     all_dates = []
     all_categories_data = {}
     failed_categories = []
-    
-    for i, (bnf_code, _) in enumerate(all_bnf.items()):
+    filtered_bnf = [bnf for bnf in all_bnf.index if bnf in selected_categories]
+    for i, bnf_code in enumerate(filtered_bnf):
         bnf_data = region_data[region_data['BNF_CHAPTER_PLUS_CODE'] == bnf_code]
         ts_data = bnf_data.groupby('YEAR_MONTH')['TOTAL_COST'].sum().reset_index()
         
@@ -145,7 +154,7 @@ def create_multi_category_forecast(df, selected_region, forecast_months):
     
     fig.update_layout(
         title=dict(
-            text=f'Prescription Forecast - {selected_region}',
+            text=f'Prescription Forecast - {region_data["REGIONAL_OFFICE_NAME"].iloc[0] if len(region_data) > 0 else ""}',
             font=dict(size=20, color='#2C3E50')
         ),
         xaxis_title='Date',
@@ -189,8 +198,8 @@ def create_multi_category_forecast(df, selected_region, forecast_months):
     
     return fig
 
-def forecast_insights(df, selected_region, forecast_periods, confidence_level):
-    region_data = df[df['REGIONAL_OFFICE_NAME'] == selected_region]
+def forecast_insights(region_data, selected_categories, forecast_periods, confidence_level):
+    # Optionally, could show insights for selected categories, but for now keep as is
     ts_data = region_data.groupby('YEAR_MONTH')['TOTAL_COST'].sum().reset_index()
     
     if len(ts_data) >= 3:

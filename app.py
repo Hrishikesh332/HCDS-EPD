@@ -9,7 +9,7 @@ from nav.clustering import clustering_analysis
 from nav.categories import category_analysis
 
 st.set_page_config(
-    page_title="NHS Prescription Dashboard",
+    page_title="NHS Dashboard",
     page_icon="🏥",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -89,11 +89,11 @@ def main():
 def create_nav():
     pages = {
         "Dashboard": "dashboard",
-        "Forecasting": "forecasting", 
-        "Fairness Analysis": "fairness",
-        "Outlier Detection": "outliers",
+        "Forecast": "forecasting", 
+        "Fairness": "fairness",
+        "Outliers": "outliers",
         "Clustering": "clustering",
-        "Category Analysis": "categories"
+        "Categories": "categories"
     }
     
     st.markdown('<div class="nav-bar">', unsafe_allow_html=True)
@@ -113,29 +113,18 @@ def create_nav():
                 st.rerun()
     
     st.markdown('</div>', unsafe_allow_html=True)
-    
-    page_titles = {v: k for k, v in pages.items()}
-    current_title = page_titles.get(current_page, "Dashboard")
-    
-    st.markdown(f'''
-    <div style="text-align: center; font-weight: bold; color: #1f77b4; margin-bottom: 1rem; 
-                padding: 0.5rem; background: rgba(31, 119, 180, 0.1); border-radius: 8px;">
-        {current_title}
-    </div>
-    ''', unsafe_allow_html=True)
-    st.markdown("---")
 
 def create_sidebar():
-    st.sidebar.title("Navigation")
-    st.sidebar.markdown("---")
+    st.sidebar.title("")
+    st.sidebar.markdown("")
     
     pages = {
         "Dashboard": "dashboard",
-        "Forecasting": "forecasting", 
-        "Fairness Analysis": "fairness",
-        "Outlier Detection": "outliers",
+        "Forecast": "forecasting", 
+        "Fairness": "fairness",
+        "Outliers": "outliers",
         "Clustering": "clustering",
-        "Category Analysis": "categories"
+        "Categories": "categories"
     }
     
     current_page = st.session_state.current_page

@@ -15,4 +15,4 @@ def create_region_selector(df):
     with col2:
         st.metric("Total Regions", len(regions))
     
-    return selected_region 
+    return selected_region

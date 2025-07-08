@@ -3,26 +3,37 @@ import plotly.graph_objects as go
 from utils import gen_real_pred_errors, calc_fairness_metrics
 
 def fairness_analysis(df):
-    st.markdown('<h1 class="main-header">Fairness Analysis</h1>', unsafe_allow_html=True)
-    
+    st.markdown('<h1 class="main-header">Fairness</h1>', unsafe_allow_html=True)
     st.markdown("""
-    Fairness of prediction models across different NHS regions and BNF categories.
-    """)
-    
+    <div style='font-size:1.1rem;line-height:1.7;'>
+    This page helps you check if the prediction model treats all NHS regions and BNF categories fairly.<br><br>
+    1. How close the predictions are to the real values.<br>
+    2. Whether predictions are too high or too low for some regions.<br>
+    3. Whether all groups get similar results.<br><br>
+
+    <span style='color:green;'><b>Green</b></span> means good (low error or bias). <span style='color:red;'><b>Red</b></span> means worse. Large gaps or significant test results may mean the model is unfair for some groups.<br>
+    </div>
+    """, unsafe_allow_html=True)
     df_errors = gen_real_pred_errors(df)
     if df_errors.empty:
         st.warning("Not enough data to compute real model fairness metrics. Please ensure there is sufficient historical data for each region and category.")
         return
     fairness_results = calc_fairness_metrics(df_errors)
-    
+    st.markdown("---")
+    st.markdown("### 1. Regional Fairness")
+    st.markdown("We check if the model is equally accurate and unbiased for all regions. Lower error and bias are better.")
     regional_analysis(df_errors)
+    st.markdown("---")
+    st.markdown("### 2. Statistical Fairness Tests")
+    st.markdown("We use statistical tests to check if differences in accuracy or bias are significant. If the p-value is below 0.05, the difference is likely real.")
     statistical_tests(fairness_results)
 
 def regional_analysis(df_errors):
     col1, col2 = st.columns(2)
     
     with col1:
-        st.subheader("Regional Prediction Accuracy")
+        st.subheader("Accuracy by Region")
+        st.caption("Shows the average prediction error for each region. Green is best, red is worst.")
         
         regional_mae = df_errors.groupby('REGIONAL_OFFICE_NAME')['MAE'].mean().sort_values()
         
@@ -52,7 +63,8 @@ def regional_analysis(df_errors):
         st.plotly_chart(fig_accuracy, use_container_width=True)
     
     with col2:
-        st.subheader("Regional Prediction Bias")
+        st.subheader("Bias by Region")
+        st.caption("Shows if predictions are too high (red) or too low (blue) for each region.")
         
         regional_bias = df_errors.groupby('REGIONAL_OFFICE_NAME')['Bias'].mean().sort_values()
         
@@ -82,7 +94,8 @@ def regional_analysis(df_errors):
         st.plotly_chart(fig_bias, use_container_width=True)
 
 def bnf_performance(df_errors):
-    st.subheader("BNF Category Performance Analysis")
+    st.subheader("BNF Category Performance")
+    st.caption("Shows which BNF categories have the highest or lowest prediction errors.")
     
     bnf_mae_stats = df_errors.groupby('BNF_CATEGORY').agg({'MAE': ['mean', 'count']}).round(2)
     bnf_mae_stats.columns = ['MAE_Mean', 'Count']
@@ -116,12 +129,13 @@ def bnf_performance(df_errors):
         st.plotly_chart(fig_bnf, use_container_width=True)
 
 def statistical_tests(fairness_results):
-    st.subheader("Statistical Fairness Tests")
+    st.subheader("Fairness Tests")
+    st.caption("These tests check if differences in accuracy or bias between regions are statistically significant. A low p-value (below 0.05) means the difference is likely real, not random.")
     
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("**Statistical Test Results**")
+        st.markdown("**Test Results**")
         tests = fairness_results['statistical_tests']
         parity_df = fairness_results['parity_df']
         parity_gap = fairness_results['parity_gap']
@@ -136,7 +150,8 @@ def statistical_tests(fairness_results):
             st.markdown('<div class="alert-success"><strong>Good - </strong> No significant bias differences across regions</div>', unsafe_allow_html=True)
     
     with col2:
-        st.markdown("**Parity Analysis**")
+        st.markdown("**Parity**")
+        st.caption("Parity means all groups get similar results. A large parity gap means some groups are treated differently.")
         
         st.dataframe(parity_df.round(4), use_container_width=True, hide_index=True)
         

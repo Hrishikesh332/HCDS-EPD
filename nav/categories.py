@@ -3,31 +3,26 @@ import pandas as pd
 import plotly.express as px
 
 def category_analysis(df):
-    st.markdown('<h1 class="main-header">BNF Category Analysis</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">Categories</h1>', unsafe_allow_html=True)
+    st.markdown("")
     
-    st.markdown("""
-    Comprehensive analysis of British National Formulary (BNF) categories to understand 
-    prescription patterns, costs, and trends across therapeutic areas.
-    """)
-    
-    # Category Selection
     available_categories = sorted(df['BNF_CHAPTER_PLUS_CODE'].unique())
     
     col1, col2 = st.columns([3, 1])
     with col1:
         selected_categories = st.multiselect(
-            "Select BNF Categories for Analysis:",
+            "Choose Categories:",
             available_categories,
             default=list(available_categories)[:5]
         )
     
     with col2:
-        st.metric("Available Categories", len(available_categories))
+        st.metric("Available", len(available_categories))
         if selected_categories:
-            st.metric("Selected Categories", len(selected_categories))
+            st.metric("Chosen", len(selected_categories))
     
     if not selected_categories:
-        st.warning("Please select at least one BNF category to begin analysis.")
+        st.warning("Select at least one category.")
         return
     
     filtered_df = df[df['BNF_CHAPTER_PLUS_CODE'].isin(selected_categories)]
@@ -38,12 +33,12 @@ def category_analysis(df):
     
 
 def category_overview(filtered_df, category_totals):
-    st.subheader("Category Distribution Overview")
+    st.subheader("Overview")
     
     col1, col2 = st.columns([2, 1])
     
     with col1:
-        st.markdown("**Total Costs by BNF Category**")
+        st.markdown("**Total by Category**")
         fig_bar = px.bar(
             x=category_totals.values,
             y=[cat.split(':')[0] + ": " + cat.split(':')[1].strip() if ':' in cat else cat for cat in category_totals.index],
@@ -65,22 +60,22 @@ def category_overview(filtered_df, category_totals):
         st.plotly_chart(fig_bar, use_container_width=True)
     
     with col2:
-        st.markdown("Key Metrics")
+        st.markdown("Numbers")
         total_cost = filtered_df['TOTAL_COST'].sum()
         avg_cost = filtered_df['TOTAL_COST'].mean()
         total_records = len(filtered_df)
         top_category = category_totals.index[0].split(':')[0] if len(category_totals) > 0 else "N/A"
         
-        st.metric("Total Cost", f"£{total_cost:,.0f}")
-        st.metric("Average Cost", f"£{avg_cost:,.0f}")
-        st.metric("Total Records", f"{total_records:,}")
+        st.metric("Total", f"\u00a3{total_cost:,.0f}")
+        st.metric("Average", f"\u00a3{avg_cost:,.0f}")
+        st.metric("Records", f"{total_records:,}")
 
 def category_trends(filtered_df, category_totals, selected_categories):
-    st.subheader("Category Trends Over Time")
+    st.subheader("Trends Over Time")
     
     time_category = filtered_df.groupby(['YEAR_MONTH', 'BNF_CHAPTER_PLUS_CODE'])['TOTAL_COST'].sum().reset_index()
     
-    st.markdown("**Category Costs Over Time**")
+    st.markdown("**Over Time**")
     top_categories_for_trends = category_totals.head(min(8, len(selected_categories))).index
     time_category_filtered = time_category[time_category['BNF_CHAPTER_PLUS_CODE'].isin(top_categories_for_trends)]
     
@@ -105,12 +100,12 @@ def category_trends(filtered_df, category_totals, selected_categories):
         fig_time.update_traces(line=dict(width=3), marker=dict(size=6))
         st.plotly_chart(fig_time, use_container_width=True)
     
-    st.subheader("Seasonal and Annual Patterns")
+    st.subheader("Seasonal & Annual")
     
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("**Monthly Seasonal Patterns**")
+        st.markdown("**Monthly Patterns**")
         if len(time_category_filtered) > 0:
             time_category_filtered_copy = time_category_filtered.copy()
             time_category_filtered_copy['Month'] = time_category_filtered_copy['YEAR_MONTH'].dt.month
@@ -134,7 +129,7 @@ def category_trends(filtered_df, category_totals, selected_categories):
             st.plotly_chart(fig_seasonal, use_container_width=True)
     
     with col2:
-        st.markdown("**Annual Cost Trends**")
+        st.markdown("**Annual Trends**")
         if len(time_category_filtered) > 0:
             time_category_filtered_copy = time_category_filtered.copy()
             time_category_filtered_copy['Year'] = time_category_filtered_copy['YEAR_MONTH'].dt.year

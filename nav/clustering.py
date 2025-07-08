@@ -8,14 +8,21 @@ from sklearn.cluster import AgglomerativeClustering
 from utils import REGION_COORDINATES
 
 def clustering_analysis(df):
-    st.markdown('<h1 class="main-header">Regional Clustering Analysis</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">Grouping</h1>', unsafe_allow_html=True)
     
-    n_clusters = st.slider("Number of Clusters", 2, 6, 3)
+    n_clusters = st.slider("Groups", 2, 6, 4)
     
     try:
         regional_clustering(df, n_clusters)
     except Exception as e:
-        st.error(f"Error in clustering analysis: {str(e)}")
+        st.error(f"Error: {str(e)}")
+    st.markdown("---")
+    st.subheader("BNF Category Grouping")
+    n_cat_clusters = st.slider("Category Groups", 2, 6, 4, key="cat_clusters")
+    try:
+        bnf_category_clustering(df, n_cat_clusters)
+    except Exception as e:
+        st.error(f"Error in BNF category grouping: {str(e)}")
 
 def regional_clustering(df, n_clusters):
     try:
@@ -52,18 +59,18 @@ def regional_clustering(df, n_clusters):
         st.error(f"Error in regional clustering: {str(e)}")
 
 def cluster_overview(regional_features):
-    col1, col2,col4 = st.columns(3)
+    col1, col2, col4 = st.columns(3)
     
     with col1:
-        st.metric("Total Regions", len(regional_features))
+        st.metric("Regions", len(regional_features))
     
     with col2:
         n_clusters = len(regional_features['Cluster'].unique())
-        st.metric("Number of Clusters", n_clusters)
+        st.metric("Clusters", n_clusters)
     
     with col4:
         largest_cluster_size = regional_features['Cluster'].value_counts().max()
-        st.metric("Largest Cluster", f"{largest_cluster_size} regions")
+        st.metric("Largest", f"{largest_cluster_size} regions")
 
 def cluster_visualization(regional_features, X_scaled, feature_cols):
     col1, col2 = st.columns(2)
@@ -98,10 +105,10 @@ def cluster_visualization(regional_features, X_scaled, feature_cols):
         cluster_summary = regional_features.groupby('Cluster')[feature_cols].mean().round(2)
         
         display_summary = cluster_summary.copy()
-        display_summary['Total_Cost'] = display_summary['Total_Cost'].apply(lambda x: f"£{x:,.0f}")
-        display_summary['Mean_Cost'] = display_summary['Mean_Cost'].apply(lambda x: f"£{x:,.0f}")
-        display_summary['Cost_Per_Record'] = display_summary['Cost_Per_Record'].apply(lambda x: f"£{x:,.0f}")
-        display_summary.columns = ['Total Cost', 'Mean Cost', 'Cost Variability', 'Cost per Record']
+        display_summary['Total_Cost'] = display_summary['Total_Cost'].apply(lambda x: f"\u00a3{x:,.0f}")
+        display_summary['Mean_Cost'] = display_summary['Mean_Cost'].apply(lambda x: f"\u00a3{x:,.0f}")
+        display_summary['Cost_Per_Record'] = display_summary['Cost_Per_Record'].apply(lambda x: f"\u00a3{x:,.0f}")
+        display_summary.columns = ['Total', 'Mean', 'Var', 'Per Record']
         
         st.dataframe(display_summary, use_container_width=True)
 
@@ -151,10 +158,97 @@ def cluster_details(regional_features, feature_cols):
             
             with col1:
                 for region in cluster_regions:
-                    st.write(f"• {region}")
+                    st.write(f"\u2022 {region}")
             
             with col2:
-                st.write(f"**Total Cost**: £{cluster_stats['Total_Cost']:,.0f}")
-                st.write(f"**Mean Cost**: £{cluster_stats['Mean_Cost']:,.0f}")
-                st.write(f"**Cost Variability**: {cluster_stats['Cost_Variability']:.2f}")
-                st.write(f"**Cost per Record**: £{cluster_stats['Cost_Per_Record']:,.0f}")
+                st.write(f"**Total**: \u00a3{cluster_stats['Total_Cost']:,.0f}")
+                st.write(f"**Mean**: \u00a3{cluster_stats['Mean_Cost']:,.0f}")
+                st.write(f"**Var**: {cluster_stats['Cost_Variability']:.2f}")
+                st.write(f"**Per Record**: \u00a3{cluster_stats['Cost_Per_Record']:,.0f}")
+
+def bnf_category_clustering(df, n_clusters):
+    import pandas as pd
+    from sklearn.preprocessing import StandardScaler
+    from sklearn.decomposition import PCA
+    from sklearn.cluster import AgglomerativeClustering
+    bnf_features = df.groupby('BNF_CHAPTER_PLUS_CODE').agg({
+        'TOTAL_COST': ['sum', 'mean', 'std', 'count']
+    }).round(2)
+    bnf_features.columns = ['Total_Cost', 'Mean_Cost', 'Std_Cost', 'Record_Count']
+    bnf_features = bnf_features.reset_index()
+    bnf_features['Cost_Per_Record'] = bnf_features['Total_Cost'] / bnf_features['Record_Count']
+    bnf_features['Cost_Variability'] = bnf_features['Std_Cost'] / bnf_features['Mean_Cost']
+    bnf_features = bnf_features.fillna(0)
+    feature_cols = ['Total_Cost', 'Mean_Cost', 'Cost_Variability', 'Cost_Per_Record']
+    X = bnf_features[feature_cols].fillna(0)
+    if len(X) > 0 and X.std().sum() > 0:
+        scaler = StandardScaler()
+        X_scaled = scaler.fit_transform(X)
+        clusterer = AgglomerativeClustering(n_clusters=n_clusters)
+        cluster_labels = clusterer.fit_predict(X_scaled)
+        bnf_features['Cluster'] = cluster_labels.astype(str)
+        # PCA scatter plot
+        pca = PCA(n_components=2)
+        X_pca = pca.fit_transform(X_scaled)
+        pca_df = pd.DataFrame({
+            'PC1': X_pca[:, 0],
+            'PC2': X_pca[:, 1],
+            'BNF_Category': bnf_features['BNF_CHAPTER_PLUS_CODE'],
+            'Cluster': bnf_features['Cluster'],
+            'Total_Cost': bnf_features['Total_Cost']
+        })
+        import plotly.express as px
+        fig_pca = px.scatter(
+            pca_df,
+            x='PC1',
+            y='PC2',
+            color='Cluster',
+            size='Total_Cost',
+            hover_name='BNF_Category',
+            title="BNF Category Clusters",
+            size_max=40
+        )
+        fig_pca.update_layout(height=400)
+        st.plotly_chart(fig_pca, use_container_width=True)
+        # Cluster summary table
+        cluster_summary = bnf_features.groupby('Cluster')[feature_cols].mean().round(2)
+        display_summary = cluster_summary.copy()
+        display_summary['Total_Cost'] = display_summary['Total_Cost'].apply(lambda x: f"\u00a3{x:,.0f}")
+        display_summary['Mean_Cost'] = display_summary['Mean_Cost'].apply(lambda x: f"\u00a3{x:,.0f}")
+        display_summary['Cost_Per_Record'] = display_summary['Cost_Per_Record'].apply(lambda x: f"\u00a3{x:,.0f}")
+        display_summary.columns = ['Total', 'Mean', 'Var', 'Per Record']
+        st.dataframe(display_summary, use_container_width=True)
+        # Cluster details with reasoning
+        for cluster_id in sorted(bnf_features['Cluster'].unique()):
+            cluster_data = bnf_features[bnf_features['Cluster'] == cluster_id]
+            cluster_categories = cluster_data['BNF_CHAPTER_PLUS_CODE'].tolist()
+            cluster_stats = cluster_data[feature_cols].mean()
+            with st.expander(f"Cluster {cluster_id} ({len(cluster_data)} categories)"):
+                col1, col2 = st.columns([2, 1])
+                with col1:
+                    for cat in cluster_categories:
+                        st.write(f"\u2022 {cat}")
+                with col2:
+                    st.write(f"**Total**: \u00a3{cluster_stats['Total_Cost']:,.0f}")
+                    st.write(f"**Mean**: \u00a3{cluster_stats['Mean_Cost']:,.0f}")
+                    st.write(f"**Var**: {cluster_stats['Cost_Variability']:.2f}")
+                    st.write(f"**Per Record**: \u00a3{cluster_stats['Cost_Per_Record']:,.0f}")
+
+                st.markdown("<hr style='margin:8px 0;'>", unsafe_allow_html=True)
+                st.markdown("**Why are these categories grouped together?**")
+                reasons = []
+                if cluster_stats['Total_Cost'] > bnf_features['Total_Cost'].mean():
+                    reasons.append("These categories have higher total costs than average.")
+                else:
+                    reasons.append("These categories have lower total costs than average.")
+                if cluster_stats['Cost_Variability'] > bnf_features['Cost_Variability'].mean():
+                    reasons.append("They show more variability in costs.")
+                else:
+                    reasons.append("They have more stable costs.")
+                if cluster_stats['Cost_Per_Record'] > bnf_features['Cost_Per_Record'].mean():
+                    reasons.append("Each record tends to have a higher cost.")
+                else:
+                    reasons.append("Each record tends to have a lower cost.")
+                st.write(" ".join(reasons))
+    else:
+        st.info("Insufficient data variation for BNF category clustering analysis")
