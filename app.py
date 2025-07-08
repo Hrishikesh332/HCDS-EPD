@@ -91,8 +91,8 @@ def create_nav():
         "Dashboard": "dashboard",
         "Forecast": "forecasting", 
         "Fairness": "fairness",
-        "Outliers": "outliers",
-        "Clustering": "clustering",
+        "Anomaly": "outliers",
+        "Grouping": "clustering",
         "Categories": "categories"
     }
     
@@ -122,8 +122,8 @@ def create_sidebar():
         "Dashboard": "dashboard",
         "Forecast": "forecasting", 
         "Fairness": "fairness",
-        "Outliers": "outliers",
-        "Clustering": "clustering",
+        "Anomaly": "outliers",
+        "Grouping": "clustering",
         "Categories": "categories"
     }
     

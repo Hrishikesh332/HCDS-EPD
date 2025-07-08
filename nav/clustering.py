@@ -9,6 +9,9 @@ from utils import REGION_COORDINATES
 
 def clustering_analysis(df):
     st.markdown('<h1 class="main-header">Grouping</h1>', unsafe_allow_html=True)
+    st.markdown("""
+    This page uses <b>hierarchical clustering</b> to group regions and BNF categories based on their cost patterns. Similar groups are placed together to help you spot patterns and similarities.
+    """, unsafe_allow_html=True)
     
     n_clusters = st.slider("Groups", 2, 6, 4)
     

@@ -17,11 +17,9 @@ def forecasting(df):
         default=default_categories
     )
     
-    col1, col2 = st.columns(2)
+    col1, _ = st.columns(2)
     with col1:
-        forecast_periods = st.slider("Months to Forecast:", 3, 36, 12)
-    with col2:
-        confidence_level = st.selectbox("Confidence:", [90, 95, 99], index=1)
+        forecast_periods = st.slider("Months to Forecast:", 1, 12, 3)
     
     if not selected_categories:
         st.warning("Select at least one category.")
@@ -30,7 +28,7 @@ def forecasting(df):
     line_chart = create_multi_category_forecast(region_data, selected_categories, forecast_periods)
     st.plotly_chart(line_chart, use_container_width=True)
     
-    forecast_insights(region_data, selected_categories, forecast_periods, confidence_level)
+    forecast_insights(region_data, selected_categories, forecast_periods)
 
 def create_multi_category_forecast(region_data, selected_categories, forecast_months):
     all_bnf = region_data.groupby('BNF_CHAPTER_PLUS_CODE')['TOTAL_COST'].sum()
@@ -198,8 +196,8 @@ def create_multi_category_forecast(region_data, selected_categories, forecast_mo
     
     return fig
 
-def forecast_insights(region_data, selected_categories, forecast_periods, confidence_level):
-    # Optionally, could show insights for selected categories, but for now keep as is
+def forecast_insights(region_data, selected_categories, forecast_periods):
+
     ts_data = region_data.groupby('YEAR_MONTH')['TOTAL_COST'].sum().reset_index()
     
     if len(ts_data) >= 3:
