@@ -76,12 +76,12 @@ def main():
     if 'current_page' not in st.session_state:
         st.session_state.current_page = 'dashboard'
     df, data_type = load_and_cache_data()
-
+    
     if data_type == "real":
         st.success("Successfully loaded NHS prescription data")
     else:
         st.warning("csv not found. Using sample data for demonstration.")
-
+    
     create_nav()
     create_sidebar()
     route_to_page(df)
